@@ -50,7 +50,17 @@ html.afweb [data-act="tutor"], html.afweb [data-act="ask"], html.afweb [data-act
 @media (prefers-reduced-motion: reduce) { .awbtn, .awf input { transition: none; } }
 
 /* desktop/móvil: variantes de texto y botón secundario */
-.awmb { display: none; } .awbtn2 { display: none; } .awmbg { display: none; }
+.awmb { display: none; } .awbtn2 { display: none; }
+/* computadora: fondo borroso en paleta azul (mismo recurso que el celular) */
+@media (min-width: 901px) {
+  #afauth { background: #B9CCF2; }
+  .awwaves { display: none; }
+  .awmbg { display: block; position: fixed; inset: -80px; background: url('fotos/gherkin.webp') center 30% / cover no-repeat; filter: blur(46px) saturate(1.15) brightness(1.08); transform: scale(1.12); }
+  .awmbg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(205, 222, 255, .72) 0%, rgba(160, 190, 245, .55) 45%, rgba(190, 200, 250, .62) 75%, rgba(225, 235, 255, .7) 100%); }
+  .awbub { background: rgba(255, 255, 255, .82); }
+  .awtag, .awtag.b { color: rgba(255, 255, 255, .92); text-shadow: 0 1px 8px rgba(30, 50, 110, .25); }
+  .awfoot { color: rgba(255, 255, 255, .88); text-shadow: 0 1px 6px rgba(30, 50, 110, .3); }
+}
 .awpw { position: relative; display: flex; flex-direction: column; gap: 6px; } .awpw .awforgot { margin-top: 0; }
 /* ===== móvil: estilo de la referencia (foto desenfocada, títulos blancos, líneas, píldoras) ===== */
 @media (max-width: 900px) {
