@@ -48,6 +48,40 @@ html.afweb [data-act="tutor"], html.afweb [data-act="ask"], html.afweb [data-act
   .awfoot { text-align: center; }
 }
 @media (prefers-reduced-motion: reduce) { .awbtn, .awf input { transition: none; } }
+
+/* desktop/móvil: variantes de texto y botón secundario */
+.awmb { display: none; } .awbtn2 { display: none; } .awmbg { display: none; }
+.awpw { position: relative; display: flex; flex-direction: column; gap: 6px; } .awpw .awforgot { margin-top: 0; }
+/* ===== móvil: estilo de la referencia (foto desenfocada, títulos blancos, líneas, píldoras) ===== */
+@media (max-width: 900px) {
+  #afauth { background: #b9b2ab; }
+  .awwaves, .awleft, .awtabs, .awalt, .awbrand { display: none !important; }
+  .awmbg { display: block; position: fixed; inset: -60px; background: url('fotos/pabellon.webp') center / cover no-repeat; filter: blur(34px) saturate(.7) brightness(1.02); transform: scale(1.1); }
+  .awmbg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(170deg, rgba(196, 160, 140, .55) 0%, rgba(205, 200, 195, .45) 45%, rgba(150, 150, 155, .55) 100%); }
+  .awwrap { grid-template-rows: 1fr auto; padding: 0 30px; min-height: 100%; }
+  .awcard { grid-row: 1; align-self: center; justify-self: stretch; max-width: 460px; margin: 0 auto; padding: 70px 0 30px; background: none; border: 0; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; border-radius: 0; }
+  #afauth .awcard h2 { font-size: 2.05rem; font-weight: 700; line-height: 1.22; color: #fff; margin: 0 0 40px; text-shadow: 0 1px 10px rgba(80, 60, 50, .18); }
+  .awdk { display: none; } .awmb { display: inline; }
+  .awcard form { gap: 22px; }
+  .awf input { height: 52px; padding: 0 40px 0 0; background: transparent; border: 0; border-bottom: 1px solid rgba(255, 255, 255, .7); border-radius: 0; color: #fff; font-size: 1.02rem; }
+  .awf input::placeholder { color: rgba(255, 255, 255, .92); }
+  .awf input:focus { background: transparent; border-color: #fff; box-shadow: 0 1px 0 0 #fff; }
+  .awf input:-webkit-autofill { -webkit-text-fill-color: #fff; transition: background-color 9999s ease-out; }
+  .aweye { color: rgba(255, 255, 255, .85); right: 0; } .aweye:hover { color: #fff; }
+  .awpw { display: block; } .awpw .aweye { right: 92px; } .awpw .awf input { padding-right: 130px; }
+  .awpw .awforgot { position: absolute; right: 0; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, .88); font-size: .82rem; font-weight: 400; }
+  .awchk { color: rgba(255, 255, 255, .9); font-size: .78rem; margin-top: 4px; }
+  .awbox { width: 19px; height: 19px; border-radius: 4px; border: 0; background: rgba(255, 255, 255, .85); }
+  .awchk input:checked + .awbox { background: #fff; } .awchk input:checked + .awbox::after { border-color: #2b2e38; }
+  .awinline { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+  .awbtn { height: 54px; margin-top: 8px; border-radius: 999px; background: #262a33; box-shadow: 0 14px 26px -14px rgba(20, 22, 30, .7); font-weight: 600; letter-spacing: .01em; }
+  .awbtn:hover { filter: none; background: #1d2028; }
+  .awbtn2 { display: block; width: 100%; height: 54px; border: 0; border-radius: 999px; background: #fff; color: #1d2028; font: inherit; font-size: .98rem; font-weight: 600; cursor: pointer; box-shadow: 0 10px 22px -16px rgba(20, 22, 30, .5); }
+  .awbtn2:focus-visible, .awbtn:focus-visible { outline: 3px solid rgba(255, 255, 255, .8); outline-offset: 2px; }
+  .awerr { background: rgba(255, 255, 255, .88); color: #B4233A; } .awok { background: rgba(255, 255, 255, .88); color: #1D7A55; }
+  #afauth .awp, .awpriv, #afauth .awpriv b { color: #fff; } .awpriv { font-size: .9rem; }
+  .awfoot { color: rgba(255, 255, 255, .85); text-align: center; padding-bottom: 22px; }
+}
 </style><script>/* ============ ArquiFoca web: cuentas (Supabase Auth) + adaptador de datos con la misma forma que window.claude.use ============
    La app no cambia: pide "db" y "user" igual que dentro de Claude. "sample" (IA) no existe en la web.
    Seguridad: la clave pública (anon) de Supabase está hecha para ir en el navegador; quién lee o escribe qué lo deciden
@@ -86,13 +120,13 @@ html.afweb [data-act="tutor"], html.afweb [data-act="ask"], html.afweb [data-act
     const tabs = `<div class="awtabs" role="tablist"><button type="button" role="tab" class="awtab ${view === "in" ? "on" : ""}" aria-selected="${view === "in"}" data-awv="in">Iniciar sesión</button><button type="button" role="tab" class="awtab ${view === "up" ? "on" : ""}" aria-selected="${view === "up"}" data-awv="up">Crear cuenta</button></div>`;
     const V = !ready ? "off" : view; let h;
     if (V === "off") h = `<h2 id="aw-t">Falta configurar el servidor</h2><p class="awp">Esta copia web aún no tiene conectada su base de datos de cuentas. Mientras tanto puedes usar ArquiFoca desde Claude.</p>`;
-    else if (V === "up") h = `<h2 id="aw-t">Crea tu cuenta de ArquiFoca</h2>${tabs}<form data-aw="up" novalidate>${field("aw-name", "Tu nombre", "text", "name", 'maxlength="40"')}${field("aw-mail", "Correo electrónico", "email", "email")}${field("aw-pass", "Contraseña (mínimo 8 caracteres)", "password", "new-password", 'minlength="8"')}
-      <label class="awchk"><input id="aw-ok" type="checkbox"><span class="awbox"></span><span>He leído y acepto el <button type="button" class="awinline" data-awv="priv">aviso de privacidad</button></span></label>${note}${btn("Crear cuenta")}</form><p class="awalt">¿Ya tienes cuenta? <button type="button" class="awlink" data-awv="in">Inicia sesión</button></p>`;
-    else if (V === "forgot") h = `<h2 id="aw-t">Recupera tu contraseña</h2><p class="awp">Escribe el correo de tu cuenta y te enviaremos un enlace para crear una nueva.</p><form data-aw="forgot" novalidate>${field("aw-mail", "Correo electrónico", "email", "email")}${note}${btn("Enviar enlace")}</form><p class="awalt"><button type="button" class="awlink" data-awv="in">Volver a iniciar sesión</button></p>`;
-    else if (V === "reset") h = `<h2 id="aw-t">Crea una contraseña nueva</h2><form data-aw="reset" novalidate>${field("aw-pass", "Contraseña nueva (mínimo 8)", "password", "new-password", 'minlength="8"')}${field("aw-pass2", "Repite la contraseña", "password", "new-password", 'minlength="8"')}${note}${btn("Guardar contraseña")}</form>`;
+    else if (V === "up") h = `<h2 id="aw-t"><span class="awdk">Crea tu cuenta de ArquiFoca</span><span class="awmb">Crea<br>tu cuenta</span></h2>${tabs}<form data-aw="up" novalidate>${field("aw-name", "Tu nombre", "text", "name", 'maxlength="40"')}${field("aw-mail", "Correo electrónico", "email", "email")}${field("aw-pass", "Contraseña (mínimo 8 caracteres)", "password", "new-password", 'minlength="8"')}
+      <label class="awchk"><input id="aw-ok" type="checkbox"><span class="awbox"></span><span>Al registrarte aceptas el <button type="button" class="awinline" data-awv="priv">aviso de privacidad</button> de ArquiFoca</span></label>${note}${btn("Crear cuenta")}<button type="button" class="awbtn2" data-awv="in">Ya tengo cuenta</button></form><p class="awalt">¿Ya tienes cuenta? <button type="button" class="awlink" data-awv="in">Inicia sesión</button></p>`;
+    else if (V === "forgot") h = `<h2 id="aw-t"><span class="awdk">Recupera tu contraseña</span><span class="awmb">Recupera<br>tu contraseña</span></h2><p class="awp">Escribe el correo de tu cuenta y te enviaremos un enlace para crear una nueva.</p><form data-aw="forgot" novalidate>${field("aw-mail", "Correo electrónico", "email", "email")}${note}${btn("Enviar enlace")}</form><p class="awalt"><button type="button" class="awlink" data-awv="in">Volver a iniciar sesión</button></p>`;
+    else if (V === "reset") h = `<h2 id="aw-t"><span class="awdk">Crea una contraseña nueva</span><span class="awmb">Nueva<br>contraseña</span></h2><form data-aw="reset" novalidate>${field("aw-pass", "Contraseña nueva (mínimo 8)", "password", "new-password", 'minlength="8"')}${field("aw-pass2", "Repite la contraseña", "password", "new-password", 'minlength="8"')}${note}${btn("Guardar contraseña")}</form>`;
     else if (V === "priv") h = `<h2 id="aw-t">Aviso de privacidad</h2><div class="awpriv"><p><b>Qué guardamos:</b> tu correo, el nombre que escribas y tu avance de estudio (lecciones, respuestas, medallas y ajustes).</p><p><b>Dónde:</b> en una base de datos de Supabase asociada a ArquiFoca. Tu contraseña la administra Supabase de forma cifrada; nadie puede verla.</p><p><b>Quién lo ve:</b> solo tú. Si activas Compañeros, tus amigos aceptados ven únicamente lo que tú elijas compartir.</p><p><b>Para qué:</b> solo para que tu avance te acompañe en cualquier dispositivo. No se vende ni se usa para publicidad.</p><p><b>Tus derechos:</b> desde la sección Cuenta puedes borrar todo tu avance y salir de Compañeros cuando quieras.</p></div><button type="button" class="awbtn" data-awv="up">Entendido</button>`;
-    else h = `<h2 id="aw-t">Entra a tu cuenta de ArquiFoca</h2>${tabs}<form data-aw="in" novalidate>${field("aw-mail", "Correo electrónico", "email", "email")}${field("aw-pass", "Contraseña", "password", "current-password")}<button type="button" class="awlink awforgot" data-awv="forgot">¿Olvidaste tu contraseña?</button>${note}${btn("Entrar")}</form><p class="awalt">¿No tienes cuenta? <button type="button" class="awlink" data-awv="up">Regístrate</button></p>`;
-    el.innerHTML = `${WAVES}<div class="awwrap"><header class="awbrand"><span class="awseal">🦭</span>arquifoca</header>
+    else h = `<h2 id="aw-t"><span class="awdk">Entra a tu cuenta de ArquiFoca</span><span class="awmb">Inicia sesión<br>en tu cuenta</span></h2>${tabs}<form data-aw="in" novalidate>${field("aw-mail", "Correo electrónico", "email", "email")}<div class="awpw">${field("aw-pass", "Contraseña", "password", "current-password")}<button type="button" class="awlink awforgot" data-awv="forgot"><span class="awdk">¿Olvidaste tu contraseña?</span><span class="awmb">¿Olvidaste?</span></button></div><label class="awchk"><input id="aw-rem" type="checkbox" checked><span class="awbox"></span><span>Recordarme en este dispositivo</span></label>${note}${btn("Entrar")}<button type="button" class="awbtn2" data-awv="up">Crear una cuenta nueva</button></form><p class="awalt">¿No tienes cuenta? <button type="button" class="awlink" data-awv="up">Regístrate</button></p>`;
+    el.innerHTML = `${WAVES}<div class="awmbg" aria-hidden="true"></div><div class="awwrap"><header class="awbrand"><span class="awseal">🦭</span>arquifoca</header>
       <section class="awleft" aria-hidden="true"><span class="awtag">ESTUDIA · REPASA · DOMINA</span><div class="awword">ArquiFoca</div><span class="awtag b">EGEL · ARQUITECTURA</span>
         <div class="awbubbles"><span class="awbub f3">Hola, soy la Foca 🦭</span><span class="awbub f2">Te ayudo a preparar el EGEL.</span><span class="awbub f1">Primero entra a tu cuenta, ¿va?</span></div></section>
       <section class="awcard" role="dialog" aria-modal="true" aria-labelledby="aw-t">${h}</section>
@@ -109,7 +143,7 @@ html.afweb [data-act="tutor"], html.afweb [data-act="ask"], html.afweb [data-act
     if (bad) { err = bad; msg = ""; draw(); return; }
     err = ""; msg = ""; busy = true; draw();
     try {
-      if (k === "in") { const { data, error } = await sb.auth.signInWithPassword({ email: keep.mail.trim(), password: val("aw-pass") }); if (error) throw error; busy = false; session = data.session || session; afterLogin(); return; }
+      if (k === "in") { const { data, error } = await sb.auth.signInWithPassword({ email: keep.mail.trim(), password: val("aw-pass") }); if (error) throw error; try { const rem = !!($("#aw-rem") || {}).checked; if (rem) localStorage.removeItem("af_norem"); else { localStorage.setItem("af_norem", "1"); sessionStorage.setItem("af_tab", "1"); } } catch (er) {} busy = false; session = data.session || session; afterLogin(); return; }
       if (k === "up") { const { data, error } = await sb.auth.signUp({ email: keep.mail.trim(), password: val("aw-pass"), options: { data: { name: keep.name.trim().slice(0, 40) }, emailRedirectTo: CFG.site || location.href.split("#")[0] } }); if (error) throw error;
         if (!data.session) { view = "in"; showPass = false; msg = "Listo. Te enviamos un correo para confirmar tu cuenta; ábrelo y después inicia sesión aquí."; } else { busy = false; session = data.session; afterLogin(); return; } }
       if (k === "forgot") { const { error } = await sb.auth.resetPasswordForEmail(keep.mail.trim(), { redirectTo: CFG.site || location.href.split("#")[0] }); if (error) throw error; msg = "Si ese correo tiene cuenta, te llegará un enlace en unos minutos. Revisa también la carpeta de spam."; }
@@ -149,6 +183,7 @@ html.afweb [data-act="tutor"], html.afweb [data-act="ask"], html.afweb [data-act
 
   function afterLogin() { if (recovering) return; try { localStorage.setItem("af_seen", "1"); } catch (e) {} hide(); resolveAuth(); }
   function start() { if (!sb) { draw(); return; }
+    try { if (localStorage.getItem("af_norem") && !sessionStorage.getItem("af_tab")) { localStorage.removeItem("af_norem"); sb.auth.signOut({ scope: "local" }).finally(() => location.reload()); return; } } catch (e) {}
     sb.auth.onAuthStateChange((ev, s) => { session = s || session; if (ev === "PASSWORD_RECOVERY") { recovering = true; view = "reset"; draw(); return; }
       if (ev === "SIGNED_OUT") { session = null; } if (s && (ev === "SIGNED_IN" || ev === "INITIAL_SESSION")) afterLogin(); });
     sb.auth.getSession().then(({ data }) => { session = data.session; if (/type=recovery/.test(location.hash)) { recovering = true; view = "reset"; draw(); return; } if (session) afterLogin(); else draw(); }); }
@@ -2022,6 +2057,34 @@ span.egoptfig { display: block; margin-top: 8px; } span.egoptfig img { width: 10
 .acdanger { border: 1px solid color-mix(in srgb, #E8587A 35%, var(--line)); } .acdanger .ach { color: #B83A4B; }
 .acconfirm { display: flex; flex-direction: column; gap: 10px; padding: 12px; border-radius: 14px; background: color-mix(in srgb, #E8587A 10%, var(--surface)); }
 .acdel { background: #C8394E; color: #fff; border-color: #C8394E; }
+
+/* v32.3: Comentarios */
+.fbpage { display: flex; flex-direction: column; gap: 18px; }
+.fbhero { display: flex; gap: 20px; align-items: center; justify-content: space-between; padding: 26px 28px; border-radius: 28px; background: radial-gradient(120% 160% at 100% 0%, color-mix(in srgb, #8E5BD6 16%, var(--surface)) 0%, var(--surface) 60%); box-shadow: var(--shadow-sm); }
+.fbhero h1 { margin: 4px 0 6px; font-size: clamp(1.4rem, 3vw, 1.9rem); } .fbhero p { margin: 0; color: var(--muted); max-width: 62ch; }
+.fbhero-ic svg.sym { width: 72px; height: 72px; stroke: none; flex: none; } @media (max-width: 560px) { .fbhero-ic { display: none; } }
+.fbgrid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 18px; align-items: start; } @media (max-width: 980px) { .fbgrid { grid-template-columns: minmax(0, 1fr); } }
+.fbside { display: flex; flex-direction: column; gap: 18px; }
+.fbcard { display: flex; flex-direction: column; gap: 14px; }
+.fbform { display: flex; flex-direction: column; gap: 18px; } .fbform > .btn { align-self: flex-start; min-height: 46px; padding-inline: 22px; }
+.fbgrp { display: flex; flex-direction: column; gap: 8px; } .fblab { font-size: .82rem; font-weight: 600; color: var(--ink-2); }
+.fbkinds { display: flex; flex-wrap: wrap; gap: 8px; }
+.fbk { border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); border-radius: 999px; padding: 8px 14px; min-height: 40px; font: inherit; font-size: .85rem; font-weight: 600; cursor: pointer; }
+.fbk.on { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.acf select, .acf textarea { font: inherit; font-size: .95rem; font-weight: 500; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); resize: vertical; }
+.acf select:focus, .acf textarea:focus { outline: 3px solid color-mix(in srgb, var(--blue) 30%, transparent); border-color: var(--blue); }
+.fbfiles { display: flex; flex-wrap: wrap; gap: 10px; }
+.fbth { position: relative; width: 104px; height: 104px; border-radius: 14px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); } .fbth img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.fbx { position: absolute; top: 6px; right: 6px; width: 28px; height: 28px; border-radius: 50%; border: 0; background: rgba(20, 26, 40, .72); display: grid; place-items: center; cursor: pointer; } .fbx svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2.5; }
+.fbadd { width: 104px; height: 104px; border-radius: 14px; border: 2px dashed var(--line); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: var(--muted); font-size: .78rem; font-weight: 600; cursor: pointer; position: relative; text-align: center; }
+.fbadd:hover { border-color: var(--blue); color: var(--blue); } .fbadd svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; }
+.fbadd input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.fbchk { color: var(--ink-2); font-size: .82rem; display: flex; gap: 10px; align-items: center; cursor: pointer; position: relative; }
+.fbchk input { position: absolute; opacity: 0; width: 1px; height: 1px; } .fbchk .awbox { width: 18px; height: 18px; flex: none; border-radius: 5px; border: 1.5px solid var(--line); display: grid; place-items: center; background: var(--surface); }
+.fbchk input:checked + .awbox { background: var(--blue); border-color: var(--blue); } .fbchk input:checked + .awbox::after { content: ""; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg) translate(-1px, -1px); }
+.fbchk input:focus-visible + .awbox { outline: 2px solid var(--blue); outline-offset: 2px; }
+.fbadmin { border: 1px dashed color-mix(in srgb, var(--blue) 40%, var(--line)); }
+.fbmine { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; } .fbmine li { padding: 12px 14px; border-radius: 14px; background: var(--surface-2); font-size: .86rem; } .fbmine p { margin: 4px 0; color: var(--ink-2); overflow-wrap: anywhere; }
 
 /* ===== Mundos ===== */
 .wmapwrap { position: relative; border-radius: 24px; overflow: hidden; box-shadow: var(--shadow); background: var(--surface-2); margin: 4px 0 4px; }
@@ -4099,6 +4162,7 @@ const NAV = [
   { id: "normativa", label: "Normativa", icon: "note", group: "Recursos" },
   { id: "dominio", label: "Mi dominio", short: "Dominio", icon: "check", group: "Tú" },
   { id: "cuenta", label: "Cuenta", icon: "user", group: "Tú" },
+  { id: "comentarios", label: "Comentarios", icon: "chat", group: "Tú" },
   { id: "ajustes", label: "Personalización", short: "Ajustes", icon: "gear", group: "Tú" },
 ];
 const ROUTES = new Set([...NAV.map(n => n.id), "practicar", "lectura", "calidad", "logros"]);
@@ -4243,7 +4307,7 @@ function render() {
   const pg0 = $("#page"), pg0r = pg0 && UI.route !== RT.route && pg0.childElementCount ? pg0.getBoundingClientRect() : null, pg0h = pg0r ? pg0.innerHTML : ""; /* para la salida animada de la vista anterior */
   if (key !== lastShellKey || !$("#page")) { document.getElementById("root").innerHTML = shell(); lastShellKey = key; renderTutor(); }
   const pill = $(".xp-pill .num"); if (pill) { pill.textContent = `${S.xp} XP`; pill.parentElement.setAttribute("aria-label", `${S.xp} puntos de experiencia, ver logros`); }
-  const views = { cuenta: vCuenta, videoteca: vVideoteca, dominio: vDominio, sistemas: vSistemas, instalaciones: vInstalaciones, calidad: vCalidad, egel: vEgel, rendimiento: vRendimiento, inicio: vInicio, biblioteca: vBiblioteca, plan: vPlan, practicar: vPracticar, simulador: vSimulador, taller: vTaller, visual: vVisual, obra: vObra, mundos: vMundos, tarjetas: vTarjetas, diseno: vDiseno, normativa: vNormativa, lectura: vLectura, calculadora: vCalculadora, errores: vErrores, logros: () => { UI.cmTab = "logros"; UI.route = "comunidad"; setHash("comunidad"); return vComunidad(); }, comunidad: vComunidad, ajustes: vSettings };
+  const views = { cuenta: vCuenta, comentarios: vComentarios, videoteca: vVideoteca, dominio: vDominio, sistemas: vSistemas, instalaciones: vInstalaciones, calidad: vCalidad, egel: vEgel, rendimiento: vRendimiento, inicio: vInicio, biblioteca: vBiblioteca, plan: vPlan, practicar: vPracticar, simulador: vSimulador, taller: vTaller, visual: vVisual, obra: vObra, mundos: vMundos, tarjetas: vTarjetas, diseno: vDiseno, normativa: vNormativa, lectura: vLectura, calculadora: vCalculadora, errores: vErrores, logros: () => { UI.cmTab = "logros"; UI.route = "comunidad"; setHash("comunidad"); return vComunidad(); }, comunidad: vComunidad, ajustes: vSettings };
   const viewKey = [UI.route, UI.topic, UI.lesson, UI.problem, UI.sim ? (UI.sim.done ? "done" : UI.sim.i) : "", UI.calcTab, UI.tvs ? (UI.tvs.done ? "tvdone" : UI.tvs.ids[UI.tvs.i]) : "", UI.ro ? (UI.ro.done ? "rodone" : UI.ro.i) : "", UI.roTab, UI.roFicha, UI.world, UI.wplay ? (UI.wplay.done ? "wdone" : UI.wplay.lv + UI.wplay.i) : "", UI.fc ? UI.fc.q[0] : "", UI.caso, UI.lect, UI.setTab].join("|");
   const page = $("#page");
   /* transición contextual: hacia adelante, hacia atrás, entrar a un mundo, iniciar simulacro, biblioteca o cambio de pregunta */
@@ -5906,7 +5970,7 @@ const SYM = {
 SYM.lesson = SYM.lectura; SYM.construccion = SYM.sis; SYM.estructuras = SYM.est; SYM.instalaciones = SYM.ins; SYM.sustentabilidad = SYM.eco; SYM.materiales = SYM.cal; SYM.presupuestos = SYM.pre;
 /* mapas: iconos de línea antiguos, secciones y categorías del Taller visual hacia la misma familia */
 const SYM_OF = { book: "lectura", tool: "taller", photo: "obra", spark: "diseno", note: "errors", timer: "sim", plan: "prg", calc: "calc", eye: "visual", map: "mundos", trophy: "trophy", chart: "rendimiento", home: "home", gear: "gear", chat: "chat", play: "practicar", user: "mas", users: "comunidad" };
-const NAV_SYM = { cuenta: "perfil", inicio: "home", mundos: "mundos", egel: "sim", biblioteca: "lectura", plan: "prg", rendimiento: "rendimiento", simulador: "sim", visual: "visual", obra: "obra", tarjetas: "tarjetas", taller: "taller", diseno: "diseno", calculadora: "calc", sistemas: "sis", instalaciones: "ins", videoteca: "vis", errores: "errors", normativa: "normativa", logros: "trophy", comunidad: "comunidad", ajustes: "gear" };
+const NAV_SYM = { cuenta: "perfil", comentarios: "chat", inicio: "home", mundos: "mundos", egel: "sim", biblioteca: "lectura", plan: "prg", rendimiento: "rendimiento", simulador: "sim", visual: "visual", obra: "obra", tarjetas: "tarjetas", taller: "taller", diseno: "diseno", calculadora: "calc", sistemas: "sis", instalaciones: "ins", videoteca: "vis", errores: "errors", normativa: "normativa", logros: "trophy", comunidad: "comunidad", ajustes: "gear" };
 const TV_SYM = { ele: "ins", pla: "plano", sis: "sis", cua: "cuantificacion", pu: "pre", est: "est", prg: "prg", com: "composicion", urb: "urbanismo", his: "historia", fun: "funcional", bio: "eco", mix: "sim" };
 let symN = 0;
 function catSym(k, cls = "") { const s = SYM[k] || SYM.lectura, u = "sy" + (++symN);
@@ -10226,6 +10290,69 @@ document.addEventListener("submit", async e => { const f = e.target.closest && e
     else { const p1 = document.getElementById("ac-p1").value, p2 = document.getElementById("ac-p2").value; if (p1.length < 8) throw new Error("La contraseña debe tener al menos 8 caracteres."); if (p1 !== p2) throw new Error("Las contraseñas no coinciden."); const { error } = await sb.auth.updateUser({ password: p1 }); if (error) throw error; A.msg = "Contraseña cambiada. Úsala la próxima vez que entres."; } }
   catch (er) { A.err = /reauth|recent/i.test(er.message || "") ? "Por seguridad, cierra sesión y vuelve a entrar antes de cambiar la contraseña." : (er.message || "No se pudo guardar."); }
   render(); }, true);
+/* ============ v32.3: sección Comentarios (fotos, errores y problemas → Supabase + aviso por correo) ============
+   El correo que recibe los avisos NO va en el código: la administradora lo escribe una vez en la app y se guarda en
+   la tabla app_settings de Supabase (la primera persona que lo configura queda como dueña y solo ella puede cambiarlo). */
+UI.fb = UI.fb || { kind: "error", files: [], sending: false, msg: "", err: "", mine: null, to: undefined, toOwner: false };
+const FB_KINDS = [["error", "Error en la app"], ["contenido", "Error en una pregunta o lección"], ["problema", "Problema con mi cuenta"], ["idea", "Sugerencia"], ["otro", "Otro"]];
+const fbKindName = k => (FB_KINDS.find(x => x[0] === k) || [0, k])[1];
+async function fbLoad() { const sb = window.__afsb, u = acctUser(), F = UI.fb; if (!sb || !u) return;
+  try { const { data } = await sb.from("feedback").select("created_at,kind,section,message,photos").eq("owner", u.id).order("created_at", { ascending: false }).limit(20); F.mine = data || []; } catch (e) { F.mine = []; }
+  try { const { data } = await sb.from("app_settings").select("value,owner").eq("key", "feedback_to").maybeSingle(); F.to = data ? data.value : ""; F.toOwner = !!(data && data.owner === u.id); } catch (e) { F.to = ""; }
+  if (UI.route === "comentarios") render(); }
+function fbShrink(file) { return new Promise((res, rej) => { const img = new Image(), url = URL.createObjectURL(file); img.onload = () => { const k = Math.min(1, 1600 / Math.max(img.width, img.height)), c = document.createElement("canvas"); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url); c.toBlob(b => b ? res(b) : rej(new Error("img")), "image/jpeg", .82); }; img.onerror = () => rej(new Error("img")); img.src = url; }); }
+function fbKeep() { const F = UI.fb, m = document.getElementById("fb-msg"), s = document.getElementById("fb-sec"); if (m) F.text = m.value; if (s) F.secv = s.value; }
+function vComentarios() { const F = UI.fb;
+  const head = `<section class="fbhero"><div><span class="eyebrow">Comentarios</span><h1>Ayúdanos a mejorar ArquiFoca</h1><p>Cuéntanos si encontraste un error, una pregunta con la respuesta equivocada o algún problema. Puedes adjuntar capturas de pantalla.</p></div><div class="fbhero-ic">${catSym("chat")}</div></section>`;
+  if (!AF_WEB) return `<div class="page fbpage">${head}<section class="card fbcard"><p>Los comentarios se envían desde <b>ArquiFoca web</b>, donde puedes adjuntar fotos y recibir la confirmación de envío.</p>${AF_SITE ? `<a class="btn primary" href="${esc(AF_SITE)}#comentarios" target="_blank" rel="noopener" style="align-self:flex-start">${icon("ext")}Abrir ArquiFoca web</a>` : ""}</section></div>`;
+  if (F.mine === null) { F.mine = []; fbLoad(); }
+  const secs = NAV.filter(n => n.id !== "comentarios").map(n => `<option value="${esc(n.label)}" ${F.secv === n.label ? "selected" : ""}>${esc(n.label)}</option>`).join("");
+  const thumbs = F.files.map((f, i) => `<div class="fbth"><img src="${f.url}" alt="Foto ${i + 1} adjunta"><button type="button" class="fbx" data-act="fb-rm" data-i="${i}" aria-label="Quitar foto ${i + 1}">${icon("close")}</button></div>`).join("");
+  const note = (F.err ? `<p class="acerr" role="alert">${esc(F.err)}</p>` : "") + (F.msg ? `<p class="acok" role="status">${esc(F.msg)}</p>` : "");
+  const form = `<section class="card fbcard"><form class="fbform" data-fbform novalidate>
+    <div class="fbgrp"><span class="fblab">¿Qué quieres reportar?</span><div class="fbkinds">${FB_KINDS.map(([k, n]) => `<button type="button" class="fbk ${F.kind === k ? "on" : ""}" data-act="fb-kind" data-k="${k}" aria-pressed="${F.kind === k}">${esc(n)}</button>`).join("")}</div></div>
+    <label class="acf"><span>¿En qué sección pasó?</span><select id="fb-sec"><option value="">Elige una sección (opcional)</option>${secs}<option value="Otra" ${F.secv === "Otra" ? "selected" : ""}>Otra</option></select></label>
+    <label class="acf"><span>Cuéntanos qué pasó</span><textarea id="fb-msg" rows="6" maxlength="3000" placeholder="Describe el error o problema. Si es una pregunta, copia su texto.">${esc(F.text || "")}</textarea></label>
+    <div class="fbgrp"><span class="fblab">Fotos o capturas <span class="tiny muted">(hasta 3)</span></span><div class="fbfiles">${thumbs}${F.files.length < 3 ? `<label class="fbadd">${icon("photo")}<span>Agregar foto</span><input type="file" accept="image/*" multiple data-fbfile></label>` : ""}</div></div>
+    <label class="fbchk"><input id="fb-tech" type="checkbox" checked><span class="awbox"></span><span>Incluir datos técnicos (navegador y tamaño de pantalla) para encontrar el error más rápido</span></label>
+    ${note}<button class="btn primary" type="submit" ${F.sending ? "disabled" : ""}>${F.sending ? "Enviando…" : `${icon("check")}Enviar comentario`}</button>
+    <p class="tiny muted">Tu mensaje llega a quien administra ArquiFoca junto con tu nombre y correo, para poder responderte. Las fotos se guardan con un enlace que solo se le comparte a ella.</p></form></section>`;
+  const admin = (F.to === "" || F.toOwner) ? `<section class="card fbcard fbadmin"><h2 class="ach">${catSym("privacidad")}Correo que recibe los comentarios</h2>
+    <p class="small">${F.to ? `Los avisos llegan a <b>${esc(F.to)}</b>. Solo tú ves y puedes cambiar este dato.` : "Aún no hay un correo configurado. Quien lo guarde primero quedará como administradora y será la única que pueda cambiarlo."}</p>
+    <form class="acform" data-fbto novalidate><label class="acf"><span>${F.to ? "Cambiar correo" : "Correo de la administradora"}</span><input id="fb-to" type="email" autocomplete="email" placeholder="tu-correo@ejemplo.com" value="${esc(F.to || "")}"></label><button class="btn sm primary" type="submit">Guardar correo</button></form>
+    <p class="tiny muted">El primer comentario que llegue enviará a ese correo un mensaje de FormSubmit para activar los avisos; ábrelo y presiona «Activate».</p></section>` : "";
+  const mine = F.mine && F.mine.length ? `<section class="card fbcard"><h2 class="ach">${catSym("logros")}Tus envíos</h2><ul class="fbmine">${F.mine.map(r => `<li><div><b>${esc(fbKindName(r.kind))}</b>${r.section ? ` · ${esc(r.section)}` : ""}<span class="tiny muted"> · ${esc(fmtFecha(r.created_at))}</span></div><p>${esc(String(r.message || "").slice(0, 160))}${String(r.message || "").length > 160 ? "…" : ""}</p>${r.photos && r.photos.length ? `<span class="tiny muted">${r.photos.length} ${r.photos.length === 1 ? "foto" : "fotos"}</span>` : ""}</li>`).join("")}</ul></section>` : "";
+  return `<div class="page fbpage">${head}<div class="fbgrid">${form}<div class="fbside">${admin}${mine}</div></div></div>`; }
+document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("[data-act^=fb-]"); if (!b) return; e.preventDefault(); e.stopPropagation(); const F = UI.fb; fbKeep();
+  if (b.dataset.act === "fb-kind") F.kind = b.dataset.k; if (b.dataset.act === "fb-rm") { const f = F.files.splice(+b.dataset.i, 1)[0]; if (f) URL.revokeObjectURL(f.url); } render(); }, true);
+document.addEventListener("change", e => { const i = e.target; if (!i || !i.matches || !i.matches("[data-fbfile]")) return; const F = UI.fb; fbKeep(); F.err = "";
+  for (const f of [...i.files]) { if (F.files.length >= 3) { F.err = "Puedes adjuntar hasta 3 fotos."; break; } if (!/^image\//.test(f.type)) { F.err = "Solo se pueden adjuntar imágenes."; continue; } if (f.size > 15 * 1024 * 1024) { F.err = "Una foto pesa más de 15 MB; intenta con una captura más ligera."; continue; } F.files.push({ file: f, url: URL.createObjectURL(f) }); }
+  render(); });
+document.addEventListener("submit", async e => { const t = e.target.closest && e.target.closest("[data-fbto]"); if (!t) return; e.preventDefault(); const F = UI.fb, sb = window.__afsb, u = acctUser(); fbKeep();
+  const v = ((document.getElementById("fb-to") || {}).value || "").trim(); if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) { F.err = "Escribe un correo válido."; F.msg = ""; render(); return; }
+  try { const r = F.toOwner ? await sb.from("app_settings").update({ value: v }).eq("key", "feedback_to") : await sb.from("app_settings").insert({ key: "feedback_to", value: v, owner: u.id }); if (r.error) throw r.error; F.to = v; F.toOwner = true; F.err = ""; F.msg = "Correo guardado. Ahí llegarán los comentarios."; }
+  catch (er) { F.err = "No se pudo guardar: puede que otra persona ya lo haya configurado."; F.msg = ""; } render(); }, true);
+document.addEventListener("submit", async e => { const f = e.target.closest && e.target.closest("[data-fbform]"); if (!f) return; e.preventDefault(); const F = UI.fb, sb = window.__afsb, u = acctUser(); fbKeep(); F.err = ""; F.msg = "";
+  const text = (F.text || "").trim(); if (text.length < 10) { F.err = "Escribe al menos una frase para que entendamos qué pasó."; render(); return; }
+  if (F.last && Date.now() - F.last < 30000) { F.err = "Espera unos segundos antes de enviar otro comentario."; render(); return; }
+  if (!sb || !u) { F.err = "Necesitas iniciar sesión para enviar comentarios."; render(); return; }
+  const tech = (document.getElementById("fb-tech") || {}).checked, sec = F.secv || "", acc = window.afAccount ? window.afAccount() : {};
+  F.sending = true; render(); const urls = [];
+  try {
+    for (let i = 0; i < F.files.length; i++) { const blob = await fbShrink(F.files[i].file), path = `${u.id}/${Date.now()}-${i}-${Math.random().toString(36).slice(2, 8)}.jpg`;
+      const up = await sb.storage.from("feedback").upload(path, blob, { contentType: "image/jpeg", upsert: false }); if (up.error) throw up.error; urls.push(sb.storage.from("feedback").getPublicUrl(path).data.publicUrl); }
+    const info = tech ? `${navigator.userAgent} · pantalla ${screen.width}×${screen.height} · ventana ${innerWidth}×${innerHeight}` : "";
+    const ins = await sb.from("feedback").insert({ owner: u.id, email: acc.email || "", name: acc.name || "", kind: F.kind, section: sec, message: text.slice(0, 3000), photos: urls, info, page: location.hash.slice(1) }); if (ins.error) throw ins.error;
+    if (F.to === undefined) await fbLoad();
+    let mailOk = !!F.to;
+    if (F.to) { try { const r = await fetch("https://formsubmit.co/ajax/" + encodeURIComponent(F.to), { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ _subject: `ArquiFoca · ${fbKindName(F.kind)}${sec ? " · " + sec : ""}`, _template: "table", _captcha: "false", _replyto: acc.email || "", Nombre: acc.name || "", Correo: acc.email || "", Tipo: fbKindName(F.kind), Sección: sec || "—", Mensaje: text.slice(0, 3000), Fotos: urls.length ? urls.join("\n") : "Sin fotos", "Datos técnicos": info || "—" }) });
+        mailOk = r.ok; } catch (er) { mailOk = false; } }
+    F.files.forEach(x => URL.revokeObjectURL(x.url)); F.files = []; F.text = ""; F.secv = ""; F.last = Date.now();
+    F.msg = mailOk ? "¡Gracias! Tu comentario se envió correctamente." : "¡Gracias! Tu comentario quedó guardado y la administradora lo verá.";
+    fbLoad();
+  } catch (er) { F.err = "No se pudo enviar. Revisa tu conexión e inténtalo de nuevo."; }
+  F.sending = false; render(); }, true);
 /* ============ Pantalla de carga arquitectónica ============
    Solo aparece mientras ArquiFoca se conecta de verdad con tu cuenta: no agrega esperas.
    Cada obra se dibuja con líneas, se rellena y da paso a la siguiente. */
