@@ -92,6 +92,59 @@ html.afweb [data-act="tutor"], html.afweb [data-act="ask"], html.afweb [data-act
   #afauth .awp, .awpriv, #afauth .awpriv b { color: #fff; } .awpriv { font-size: .9rem; }
   .awfoot { color: rgba(255, 255, 255, .85); text-align: center; padding-bottom: 22px; }
 }
+
+/* ===== v32.4: logo y animaciones ===== */
+.awbrand { gap: 12px; }
+.awlogo { width: 40px; height: 40px; flex: none; filter: drop-shadow(0 8px 16px rgba(60, 80, 220, .35)); }
+.awname { font-family: Outfit, Inter, sans-serif; font-size: 1.4rem; letter-spacing: -.01em; line-height: 1; display: inline-flex; }
+.awname b { font-weight: 800; color: #12245C; }
+.awname span { font-weight: 600; background: linear-gradient(100deg, #2F7BFF, #6A5CFF); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.awseal { display: none; }
+.awglow, .awdots { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+.awglow i { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .55; }
+.awglow .g1 { width: 46vw; height: 46vw; left: -8vw; top: -12vw; background: radial-gradient(closest-side, #9CC2FF, transparent); }
+.awglow .g2 { width: 40vw; height: 40vw; right: -10vw; top: 20vh; background: radial-gradient(closest-side, #B7A6FF, transparent); }
+.awglow .g3 { width: 50vw; height: 34vw; left: 20vw; bottom: -18vw; background: radial-gradient(closest-side, #8FE3FF, transparent); opacity: .4; }
+.awdots i { position: absolute; left: var(--x); bottom: -10px; width: var(--s); height: var(--s); border-radius: 50%; background: rgba(255, 255, 255, .75); box-shadow: 0 0 10px rgba(255, 255, 255, .8); opacity: 0; }
+.awtyping { display: none; gap: 3px; align-items: center; height: 14px; } .awtyping i { width: 5px; height: 5px; border-radius: 50%; background: #7D8DB8; }
+.awcard { transition: box-shadow .3s ease; } .awcard:focus-within { box-shadow: 0 30px 70px -30px rgba(40, 70, 160, .6); }
+@media (max-width: 900px) { .awglow, .awdots { display: none; } .awlogo { width: 34px; height: 34px; } }
+@media (prefers-reduced-motion: no-preference) {
+  .awmbg { animation: awdrift 28s ease-in-out infinite alternate; }
+  @keyframes awdrift { 0% { transform: scale(1.12) translate(0, 0); filter: blur(46px) saturate(1.15) brightness(1.08) hue-rotate(0deg); } 50% { transform: scale(1.2) translate(-2.5%, 1.5%); } 100% { transform: scale(1.16) translate(2%, -2%); filter: blur(46px) saturate(1.25) brightness(1.1) hue-rotate(-14deg); } }
+  @media (max-width: 900px) { @keyframes awdrift { 0% { transform: scale(1.1); } 100% { transform: scale(1.18) translate(-2%, 2%); } } }
+  .awglow .g1 { animation: awfloat1 18s ease-in-out infinite alternate; } .awglow .g2 { animation: awfloat2 22s ease-in-out infinite alternate; } .awglow .g3 { animation: awfloat1 26s ease-in-out infinite alternate-reverse; }
+  @keyframes awfloat1 { to { transform: translate(8vw, 6vh) scale(1.15); } } @keyframes awfloat2 { to { transform: translate(-10vw, -8vh) scale(.9); } }
+  .awdots i { animation: awrise var(--d) linear infinite; animation-delay: var(--dl); }
+  @keyframes awrise { 0% { transform: translateY(0) scale(.6); opacity: 0; } 15% { opacity: .8; } 85% { opacity: .5; } 100% { transform: translateY(-105vh) scale(1.1); opacity: 0; } }
+  .awword { background-size: 220% 100%; background-image: linear-gradient(100deg, #10235E 0%, #1C3E9E 30%, #4F7BFF 48%, #1C3E9E 66%, #10235E 100%); animation: awshine 7s ease-in-out infinite; }
+  @keyframes awshine { 0%, 100% { background-position: 100% 0; } 50% { background-position: 0 0; } }
+  .awlogo { animation: awlogo 6s ease-in-out infinite; } @keyframes awlogo { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-2px) rotate(-3deg); } }
+  .awbub { animation: awbob 5s ease-in-out infinite; } .awbub.f2 { animation-delay: -1.6s; } .awbub.f1 { animation-delay: -3.2s; }
+  @keyframes awbob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+  .awbtn { background-size: 200% 100%; background-image: linear-gradient(90deg, #2F8BFF 0%, #4C6BFF 50%, #2F8BFF 100%); transition: background-position .6s ease, filter .15s, transform .15s; } .awbtn:hover { background-position: 100% 0; }
+  .awtab.on::after { animation: awline .35s ease; } @keyframes awline { from { width: 0; } to { width: 28px; } }
+  .awswap { animation: awswap .38s cubic-bezier(.2, .8, .2, 1); } @keyframes awswap { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
+  .awerr { animation: awshake .4s ease; } @keyframes awshake { 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+  .awok { animation: awpop .35s ease; } @keyframes awpop { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: none; } }
+  /* entrada (solo la primera vez) */
+  .awintro .awbrand { animation: awup .7s .05s both cubic-bezier(.2, .8, .2, 1); }
+  .awintro .awtag { animation: awup .7s .25s both cubic-bezier(.2, .8, .2, 1); } .awintro .awtag.b { animation-delay: .55s; }
+  .awintro .awword { animation: awup .9s .35s both cubic-bezier(.2, .8, .2, 1), awshine 7s 1.2s ease-in-out infinite; }
+  .awintro .awcard { animation: awcard .9s .3s both cubic-bezier(.2, .8, .2, 1); }
+  .awintro .awfoot { animation: awfade 1s .9s both; }
+  .awintro .awbub.f3 { animation: awpopb .45s .9s both, awbob 5s 1.4s ease-in-out infinite; }
+  .awintro .awbub.f2 { animation: awpopb .45s 1.5s both, awbob 5s 2s ease-in-out infinite; }
+  .awintro .awbub.f1 { animation: awpopb .45s 2.1s both, awbob 5s 2.6s ease-in-out infinite; }
+  .awintro .awbub.f1 .awtyping { display: inline-flex; animation: awhide 0s 3.3s forwards; } .awintro .awbub.f1 .awbt { display: none; animation: awshow 0s 3.3s forwards; }
+  .awintro .awtyping i { animation: awdot 1s infinite; } .awintro .awtyping i:nth-child(2) { animation-delay: .15s; } .awintro .awtyping i:nth-child(3) { animation-delay: .3s; }
+  @keyframes awup { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  @keyframes awcard { from { opacity: 0; transform: translateY(26px) scale(.97); } to { opacity: 1; transform: none; } }
+  @keyframes awfade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes awpopb { from { opacity: 0; transform: translateY(8px) scale(.9); } to { transform: none; } }
+  @keyframes awhide { to { display: none; } } @keyframes awshow { to { display: inline; } }
+  @keyframes awdot { 0%, 100% { opacity: .3; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-2px); } }
+}
 </style><script>/* ============ ArquiFoca web: cuentas (Supabase Auth) + adaptador de datos con la misma forma que window.claude.use ============
    La app no cambia: pide "db" y "user" igual que dentro de Claude. "sample" (IA) no existe en la web.
    Seguridad: la clave pública (anon) de Supabase está hecha para ir en el navegador; quién lee o escribe qué lo deciden
@@ -123,6 +176,11 @@ html.afweb [data-act="tutor"], html.afweb [data-act="ask"], html.afweb [data-act
     <path d="M-50 600C240 520 420 690 680 600S1100 380 1500 470" fill="none" stroke="url(#awg3)" stroke-width="3" filter="url(#awbl2)"/>
     <path d="M-50 700C300 640 480 760 760 690S1180 540 1500 610V900H-50z" fill="#F4F8FF" opacity=".75" filter="url(#awbl2)"/>
     ${[[160, 300, 5], [220, 520, 3], [520, 230, 4], [980, 210, 3], [1300, 300, 5], [1180, 760, 4], [760, 120, 3]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#9DB8FF" opacity=".55"/>`).join("")}</svg>`;
+  const LOGO = `<svg class="awlogo" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="awlg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3D8BFF"/><stop offset=".55" stop-color="#4C6BFF"/><stop offset="1" stop-color="#7B5CFF"/></linearGradient><linearGradient id="awlh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+    <rect x="1" y="1" width="46" height="46" rx="14" fill="url(#awlg)"/><rect x="1" y="1" width="46" height="46" rx="14" fill="url(#awlh)"/>
+    <path d="M10.5 37.5 24 10l13.5 27.5" fill="none" stroke="#fff" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M17.6 37.5v-4.2a6.4 6.4 0 0 1 12.8 0v4.2" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round"/>
+    <circle cx="24" cy="22.6" r="2.3" fill="#fff"/><path d="M8 37.5h32" stroke="#fff" stroke-opacity=".55" stroke-width="2.4" stroke-linecap="round"/></svg>`;
   function draw() { let el = $("#afauth"); if (!el) { el = document.createElement("div"); el.id = "afauth"; document.body.appendChild(el); }
     el.querySelectorAll("input").forEach(i => { if (i.id) FV[i.id] = i.type === "checkbox" ? i.checked : i.value; }); const keepVals = FV;
     const note = (err ? `<p class="awerr" role="alert">${esc(err)}</p>` : "") + (msg ? `<p class="awok" role="status">${esc(msg)}</p>` : "");
@@ -136,11 +194,15 @@ html.afweb [data-act="tutor"], html.afweb [data-act="ask"], html.afweb [data-act
     else if (V === "reset") h = `<h2 id="aw-t"><span class="awdk">Crea una contraseña nueva</span><span class="awmb">Nueva<br>contraseña</span></h2><form data-aw="reset" novalidate>${field("aw-pass", "Contraseña nueva (mínimo 8)", "password", "new-password", 'minlength="8"')}${field("aw-pass2", "Repite la contraseña", "password", "new-password", 'minlength="8"')}${note}${btn("Guardar contraseña")}</form>`;
     else if (V === "priv") h = `<h2 id="aw-t">Aviso de privacidad</h2><div class="awpriv"><p><b>Qué guardamos:</b> tu correo, el nombre que escribas y tu avance de estudio (lecciones, respuestas, medallas y ajustes).</p><p><b>Dónde:</b> en una base de datos de Supabase asociada a ArquiFoca. Tu contraseña la administra Supabase de forma cifrada; nadie puede verla.</p><p><b>Quién lo ve:</b> solo tú. Si activas Compañeros, tus amigos aceptados ven únicamente lo que tú elijas compartir.</p><p><b>Para qué:</b> solo para que tu avance te acompañe en cualquier dispositivo. No se vende ni se usa para publicidad.</p><p><b>Tus derechos:</b> desde la sección Cuenta puedes borrar todo tu avance y salir de Compañeros cuando quieras.</p></div><button type="button" class="awbtn" data-awv="up">Entendido</button>`;
     else h = `<h2 id="aw-t"><span class="awdk">Entra a tu cuenta de ArquiFoca</span><span class="awmb">Inicia sesión<br>en tu cuenta</span></h2>${tabs}<form data-aw="in" novalidate>${field("aw-mail", "Correo electrónico", "email", "email")}<div class="awpw">${field("aw-pass", "Contraseña", "password", "current-password")}<button type="button" class="awlink awforgot" data-awv="forgot"><span class="awdk">¿Olvidaste tu contraseña?</span><span class="awmb">¿Olvidaste?</span></button></div><label class="awchk"><input id="aw-rem" type="checkbox" checked><span class="awbox"></span><span>Recordarme en este dispositivo</span></label>${note}${btn("Entrar")}<button type="button" class="awbtn2" data-awv="up">Crear una cuenta nueva</button></form><p class="awalt">¿No tienes cuenta? <button type="button" class="awlink" data-awv="up">Regístrate</button></p>`;
-    el.innerHTML = `${WAVES}<div class="awmbg" aria-hidden="true"></div><div class="awwrap"><header class="awbrand"><span class="awseal">🦭</span>arquifoca</header>
+    if (!el.querySelector(".awwrap")) { el.classList.add("awintro"); setTimeout(() => el.classList.remove("awintro"), 4200);
+      el.innerHTML = `<div class="awmbg" aria-hidden="true"></div><div class="awglow" aria-hidden="true"><i class="g1"></i><i class="g2"></i><i class="g3"></i></div><div class="awdots" aria-hidden="true">${[...Array(14)].map((_, i) => `<i style="--x:${(i * 37) % 100}%;--d:${8 + (i % 5) * 3}s;--s:${i % 3 + 3}px;--dl:-${i * 1.7}s"></i>`).join("")}</div>
+      <div class="awwrap"><header class="awbrand">${LOGO}<span class="awname"><b>Arqui</b><span>Foca</span></span></header>
       <section class="awleft" aria-hidden="true"><span class="awtag">ESTUDIA · REPASA · DOMINA</span><div class="awword">ArquiFoca</div><span class="awtag b">EGEL · ARQUITECTURA</span>
-        <div class="awbubbles"><span class="awbub f3">Hola, soy la Foca 🦭</span><span class="awbub f2">Te ayudo a preparar el EGEL.</span><span class="awbub f1">Primero entra a tu cuenta, ¿va?</span></div></section>
-      <section class="awcard" role="dialog" aria-modal="true" aria-labelledby="aw-t">${h}</section>
-      <footer class="awfoot">ArquiFoca es una app de estudio independiente; no es material oficial del Ceneval.</footer></div>`;
+        <div class="awbubbles"><span class="awbub f3">Hola, soy la Foca 🦭</span><span class="awbub f2">Prepárate para el EGEL.</span><span class="awbub f1"><span class="awtyping"><i></i><i></i><i></i></span><span class="awbt">Primero entra a tu cuenta, ¿va?</span></span></div></section>
+      <section class="awcard" role="dialog" aria-modal="true" aria-labelledby="aw-t"></section>
+      <footer class="awfoot">ArquiFoca es una app de estudio independiente; no es material oficial del Ceneval.</footer></div>`; }
+    const card = el.querySelector(".awcard"), swap = draw.last && draw.last !== V; draw.last = V;
+    card.innerHTML = `<div class="awin ${swap ? "awswap" : ""}">${h}</div>`;
     Object.entries(keepVals).forEach(([id, v]) => { const i = el.querySelector("#" + id); if (i) { if (i.type === "checkbox") i.checked = v; else i.value = v; } });
     const f = el.querySelector(".awcard input:not([type=checkbox])"); if (f && !f.value) setTimeout(() => f.focus({ preventScroll: true }), 30); }
   function hide() { const el = $("#afauth"); if (el) el.remove(); }
