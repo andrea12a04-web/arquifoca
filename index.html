@@ -145,6 +145,46 @@ html.afweb [data-act="tutor"], html.afweb [data-act="ask"], html.afweb [data-act
   @keyframes awhide { to { display: none; } } @keyframes awshow { to { display: inline; } }
   @keyframes awdot { 0%, 100% { opacity: .3; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-2px); } }
 }
+
+/* ===== v32.6: computadora — fondo azul granulado y tenue, tarjeta sin relleno con borde fino, letras blancas ===== */
+@media (min-width: 901px) {
+  #afauth { background: #6F95C9; color: #fff; }
+  .awmbg { background: radial-gradient(60% 75% at 6% 32%, #22357F 0%, rgba(34, 53, 127, 0) 70%), radial-gradient(45% 60% at 52% 18%, #4A86C2 0%, rgba(74, 134, 194, 0) 72%), radial-gradient(55% 70% at 88% 62%, #C9D7E6 0%, rgba(201, 215, 230, 0) 70%), radial-gradient(50% 60% at 30% 95%, #9FBAD9 0%, rgba(159, 186, 217, 0) 70%), linear-gradient(115deg, #2E4B97 0%, #4D80BE 45%, #A7C0DC 78%, #C6D5E4 100%) !important; filter: blur(30px) !important; inset: -60px; }
+  .awmbg::after { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") repeat, rgba(20, 35, 80, .06) !important; opacity: .55; mix-blend-mode: overlay; filter: none; inset: 60px; }
+  .awglow { opacity: .35; } .awdots i { background: rgba(255, 255, 255, .5); box-shadow: none; }
+  .awname b { color: #fff; } .awname span { background: none; color: rgba(255, 255, 255, .78); -webkit-text-fill-color: rgba(255, 255, 255, .78); }
+  .awlogo { filter: drop-shadow(0 8px 18px rgba(10, 20, 60, .35)); }
+  .awtag, .awtag.b { color: rgba(255, 255, 255, .72); text-shadow: none; }
+  .awword, .awintro .awword { background-image: linear-gradient(100deg, #FFFFFF 0%, #FFFFFF 38%, #CFE2FF 50%, #FFFFFF 62%, #FFFFFF 100%) !important; text-shadow: none; filter: drop-shadow(0 10px 30px rgba(10, 25, 70, .25)); }
+  .awbub { background: rgba(255, 255, 255, .14); color: #fff; border: 1px solid rgba(255, 255, 255, .3); box-shadow: none; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  .awtyping i { background: #fff; }
+  .awcard { background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; border: 1px solid rgba(255, 255, 255, .55); border-radius: 26px; box-shadow: none !important; padding: 38px 36px 30px; }
+  .awcard:focus-within { border-color: rgba(255, 255, 255, .85); box-shadow: 0 0 0 4px rgba(255, 255, 255, .06) !important; }
+  #afauth .awcard h2 { color: #fff; font-size: 1.5rem; font-weight: 600; letter-spacing: -.005em; margin-bottom: 22px; }
+  .awtab { color: rgba(255, 255, 255, .62); } .awtab.on { color: #fff; } .awtab.on::after { background: #fff; }
+  .awtab:focus-visible { outline-color: #fff; }
+  .awf input { background: transparent; border: 0; border-bottom: 1px solid rgba(255, 255, 255, .55); border-radius: 0; color: #fff; padding: 0 44px 0 2px; height: 48px; }
+  .awf input::placeholder { color: rgba(255, 255, 255, .7); }
+  .awf input:focus { background: transparent; border-bottom-color: #fff; box-shadow: 0 1px 0 0 #fff; }
+  .awf input:-webkit-autofill { -webkit-text-fill-color: #fff; transition: background-color 9999s ease-out; }
+  .aweye { color: rgba(255, 255, 255, .8); } .aweye:hover { color: #fff; } .aweye:focus-visible { outline-color: #fff; }
+  .awchk, .awchk span { color: rgba(255, 255, 255, .82); }
+  .awbox { background: transparent; border-color: rgba(255, 255, 255, .75); } .awchk input:checked + .awbox { background: #fff; border-color: #fff; } .awchk input:checked + .awbox::after { border-color: #2B4A93; }
+  .awchk input:focus-visible + .awbox { outline-color: #fff; }
+  .awinline, .awlink { color: #fff; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255, 255, 255, .5); } .awlink:hover, .awinline:hover { text-decoration-color: #fff; }
+  .awforgot { color: rgba(255, 255, 255, .85); }
+  .awbtn { background: #fff !important; color: #1F3A7A; border-radius: 999px; box-shadow: 0 12px 26px -16px rgba(10, 25, 70, .6); height: 50px; }
+  .awbtn:hover { filter: none; background: #EEF4FF !important; } .awbtn:focus-visible { outline: 3px solid rgba(255, 255, 255, .6); }
+  .awalt { color: rgba(255, 255, 255, .75); }
+  .awerr { background: rgba(255, 255, 255, .92); color: #B4233A; } .awok { background: rgba(255, 255, 255, .92); color: #1D7A55; }
+  #afauth .awp, .awpriv, #afauth .awpriv b { color: #fff; }
+  .awfoot { color: rgba(255, 255, 255, .7); text-shadow: none; }
+}
+@media (max-width: 900px) {
+  .awcard, .awcard:focus-within { box-shadow: none !important; background: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+  .awbtn { background-image: none !important; background-color: #262a33 !important; }
+  .awbtn:hover { background-color: #1d2028 !important; }
+}
 </style><script>/* ============ ArquiFoca web: cuentas (Supabase Auth) + adaptador de datos con la misma forma que window.claude.use ============
    La app no cambia: pide "db" y "user" igual que dentro de Claude. "sample" (IA) no existe en la web.
    Seguridad: la clave pública (anon) de Supabase está hecha para ir en el navegador; quién lee o escribe qué lo deciden
@@ -2155,9 +2195,12 @@ span.egoptfig { display: block; margin-top: 8px; } span.egoptfig img { width: 10
 .fbmine { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; } .fbmine li { padding: 12px 14px; border-radius: 14px; background: var(--surface-2); font-size: .86rem; } .fbmine p { margin: 4px 0; color: var(--ink-2); overflow-wrap: anywhere; }
 
 /* v32.5: logo nuevo */
-.logo .mark.bm { background: none; box-shadow: 0 6px 14px rgba(76, 107, 255, .32); border-radius: 12px; overflow: visible; }
+.logo .mark.bm { background: none; box-shadow: 0 6px 14px color-mix(in srgb, var(--blue, #4C6BFF) 38%, transparent); border-radius: 12px; overflow: visible; }
 .logo .mark.bm svg, .al-seal.bm svg { width: 38px; height: 38px; margin: 0; display: block; }
 .al-seal.bm { background: none; box-shadow: none; } .al-seal.bm svg { width: 64px; height: 64px; filter: drop-shadow(0 10px 20px rgba(76, 107, 255, .35)); }
+
+.brandmark .bmbg { fill: var(--blue, #4C6BFF); }
+html.dk .brandmark .bmfg { fill: var(--bg, #141A33); }
 
 /* ===== Mundos ===== */
 .wmapwrap { position: relative; border-radius: 24px; overflow: hidden; box-shadow: var(--shadow); background: var(--surface-2); margin: 4px 0 4px; }
@@ -4823,7 +4866,7 @@ function finishSim() {
 
 /* v32.5: logo de ArquiFoca (foca con pelota) */
 let BM_N = 0;
-function brandMark() { const id = "bm" + (++BM_N); return "<svg viewBox=\"0 0 100 100\" class=\"brandmark\" aria-hidden=\"true\"><defs><linearGradient id=\"g" + id + "\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#3D8BFF\"/><stop offset=\".55\" stop-color=\"#4C6BFF\"/><stop offset=\"1\" stop-color=\"#7B5CFF\"/></linearGradient><linearGradient id=\"h" + id + "\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#fff\" stop-opacity=\".3\"/><stop offset=\".6\" stop-color=\"#fff\" stop-opacity=\"0\"/></linearGradient> <mask id=\"c" + id + "\"><rect width=\"100\" height=\"100\" fill=\"#fff\"/><g fill=\"#000\" stroke=\"#000\" stroke-width=\"6.5\" stroke-linejoin=\"round\"><path d=\"M13 39.5C13.2 34 18 28.4 25 28c7.4-.4 12.6 4 13.6 10.4.9 5.6 5.8 9.2 13.4 9.6 10.6.6 20.4-1 27-6.6l7.8-9.4c1.6-1.8 4.6-.4 4 2l-3.6 10.6 8.8 4.4c2.2 1.1 1.4 4.4-1 4.2l-11.4-1C74 61.6 60.8 66 46.4 65.8 34.6 65.6 26.6 60.4 24.4 52.6c-.8-2.8-2.6-4.6-5.4-5.4C15.4 46.2 12.9 43.4 13 39.5z\"/><path d=\"M31.5 57.5c-2.4 6.4-7 11.4-13.4 13.6 6.8 1.6 14.2-.8 18.6-6.4z\"/></g></mask> <mask id=\"f" + id + "\"><rect width=\"100\" height=\"100\" fill=\"#fff\"/><path d=\"M31.5 57.5c-2.4 6.4-7 11.4-13.4 13.6 6.8 1.6 14.2-.8 18.6-6.4z\" fill=\"#000\" stroke=\"#000\" stroke-width=\"3.4\" stroke-linejoin=\"round\"/><circle cx=\"26.6\" cy=\"35\" r=\"2.4\" fill=\"#000\"/><ellipse cx=\"14.4\" cy=\"39.2\" rx=\"1.6\" ry=\"1.3\" fill=\"#000\"/></mask></defs><rect width=\"100\" height=\"100\" rx=\"26\" fill=\"url(#g" + id + ")\"/><rect width=\"100\" height=\"100\" rx=\"26\" fill=\"url(#h" + id + ")\"/> <g transform=\"translate(4.6 -3.3) scale(.84)\"><circle cx=\"57\" cy=\"76\" r=\"23\" fill=\"#fff\" mask=\"url(#c" + id + ")\"/><path d=\"M13 39.5C13.2 34 18 28.4 25 28c7.4-.4 12.6 4 13.6 10.4.9 5.6 5.8 9.2 13.4 9.6 10.6.6 20.4-1 27-6.6l7.8-9.4c1.6-1.8 4.6-.4 4 2l-3.6 10.6 8.8 4.4c2.2 1.1 1.4 4.4-1 4.2l-11.4-1C74 61.6 60.8 66 46.4 65.8 34.6 65.6 26.6 60.4 24.4 52.6c-.8-2.8-2.6-4.6-5.4-5.4C15.4 46.2 12.9 43.4 13 39.5z\" fill=\"#fff\" mask=\"url(#f" + id + ")\"/><path d=\"M31.5 57.5c-2.4 6.4-7 11.4-13.4 13.6 6.8 1.6 14.2-.8 18.6-6.4z\" fill=\"#fff\"/></g></svg>"; }
+function brandMark() { const id = "bm" + (++BM_N); return "<svg viewBox=\"0 0 100 100\" class=\"brandmark\" aria-hidden=\"true\"><defs><linearGradient id=\"g" + id + "\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" style=\"stop-color:var(--blue-l,#3D8BFF)\"/><stop offset=\".55\" style=\"stop-color:var(--blue,#4C6BFF)\"/><stop offset=\"1\" style=\"stop-color:var(--purple,#7B5CFF)\"/></linearGradient><linearGradient id=\"h" + id + "\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#fff\" stop-opacity=\".3\"/><stop offset=\".6\" stop-color=\"#fff\" stop-opacity=\"0\"/></linearGradient> <mask id=\"c" + id + "\"><rect width=\"100\" height=\"100\" fill=\"#fff\"/><g fill=\"#000\" stroke=\"#000\" stroke-width=\"6.5\" stroke-linejoin=\"round\"><path d=\"M13 39.5C13.2 34 18 28.4 25 28c7.4-.4 12.6 4 13.6 10.4.9 5.6 5.8 9.2 13.4 9.6 10.6.6 20.4-1 27-6.6l7.8-9.4c1.6-1.8 4.6-.4 4 2l-3.6 10.6 8.8 4.4c2.2 1.1 1.4 4.4-1 4.2l-11.4-1C74 61.6 60.8 66 46.4 65.8 34.6 65.6 26.6 60.4 24.4 52.6c-.8-2.8-2.6-4.6-5.4-5.4C15.4 46.2 12.9 43.4 13 39.5z\"/><path d=\"M31.5 57.5c-2.4 6.4-7 11.4-13.4 13.6 6.8 1.6 14.2-.8 18.6-6.4z\"/></g></mask> <mask id=\"f" + id + "\"><rect width=\"100\" height=\"100\" fill=\"#fff\"/><path d=\"M31.5 57.5c-2.4 6.4-7 11.4-13.4 13.6 6.8 1.6 14.2-.8 18.6-6.4z\" fill=\"#000\" stroke=\"#000\" stroke-width=\"3.4\" stroke-linejoin=\"round\"/><circle cx=\"26.6\" cy=\"35\" r=\"2.4\" fill=\"#000\"/><ellipse cx=\"14.4\" cy=\"39.2\" rx=\"1.6\" ry=\"1.3\" fill=\"#000\"/></mask></defs><rect width=\"100\" height=\"100\" rx=\"26\" fill=\"url(#g" + id + ")\"/><rect width=\"100\" height=\"100\" rx=\"26\" fill=\"url(#h" + id + ")\"/> <g transform=\"translate(4.6 -3.3) scale(.84)\"><circle cx=\"57\" cy=\"76\" r=\"23\" class=\"bmfg\" fill=\"#fff\" mask=\"url(#c" + id + ")\"/><path d=\"M13 39.5C13.2 34 18 28.4 25 28c7.4-.4 12.6 4 13.6 10.4.9 5.6 5.8 9.2 13.4 9.6 10.6.6 20.4-1 27-6.6l7.8-9.4c1.6-1.8 4.6-.4 4 2l-3.6 10.6 8.8 4.4c2.2 1.1 1.4 4.4-1 4.2l-11.4-1C74 61.6 60.8 66 46.4 65.8 34.6 65.6 26.6 60.4 24.4 52.6c-.8-2.8-2.6-4.6-5.4-5.4C15.4 46.2 12.9 43.4 13 39.5z\" class=\"bmfg\" fill=\"#fff\" mask=\"url(#f" + id + ")\"/><path d=\"M31.5 57.5c-2.4 6.4-7 11.4-13.4 13.6 6.8 1.6 14.2-.8 18.6-6.4z\" class=\"bmfg\" fill=\"#fff\"/></g></svg>"; }
 /* ============ Calculadora flotante ============
    Evalúa con un analizador propio (shunting-yard); nunca usa eval ni Function. */
 const CALC = { open: false, min: false, expr: "", hist: [], err: "" };
