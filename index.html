@@ -389,7 +389,7 @@ button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 
 /* ---------- Bottom tab bar (phone) with floating orb ---------- */
 .tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; background: var(--tabbar, var(--surface)); border-radius: 26px 26px 0 0; box-shadow: 0 -6px 28px rgba(52, 92, 170, .1);
-  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: end; height: calc(70px + env(safe-area-inset-bottom, 0px));
+  display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); align-items: end; height: calc(70px + env(safe-area-inset-bottom, 0px));
   padding-bottom: env(safe-area-inset-bottom, 0px); padding-left: max(6px, env(safe-area-inset-left, 0px)); padding-right: max(6px, env(safe-area-inset-right, 0px)); }
 .tabbar button { border: 0; background: none; height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--ink-2); padding: 0; position: relative; }
 .tabbar .orb { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; transition: transform .25s ease, background .2s; }
