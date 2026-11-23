@@ -2272,6 +2272,24 @@ body.wfull .fcbubble { background: #1F2A40; } body.wfull .fchint { background: #
 body.wfull .fcx { background: #1F2A40; color: #EEF3FA; } body.wfull .fcres { background: rgba(43, 182, 115, .16); border-color: rgba(43, 182, 115, .4); } body.wfull .focapanel .btn:not(.primary) { background: #1F2A40; color: #EEF3FA; border-color: rgba(255, 255, 255, .16); }
 body.wfull .ffav, body.wfull .fcav { background: #1F2A40; } body.wfull .focapanel .fcq, body.wfull .focapanel b { color: #EEF3FA; }
 
+/* v33.3 · Solicitudes en Compañeros */
+.socreqbox { margin: 12px 0; padding: 14px; border-radius: var(--r-lg, 18px); border: 1px solid var(--line); background: var(--surface); display: flex; flex-direction: column; gap: 10px; container-type: inline-size; }
+.socreqh .socsh { display: flex; align-items: center; gap: 8px; margin: 0; }
+.socreq-badge { padding: 2px 9px; border-radius: 999px; background: var(--blue); color: var(--on-blue, #fff); font: 700 .72rem var(--f-body); }
+.socreqcols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; } @container (max-width: 560px) { .socreqcols { grid-template-columns: 1fr; } }
+.socreqcol { display: flex; flex-direction: column; gap: 8px; padding: 10px; border-radius: var(--r-md, 14px); background: var(--surface-2); min-width: 0; }
+.socreqt { margin: 0; font-size: .74rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.socreqt span { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; display: inline-grid; place-items: center; background: var(--surface); color: var(--ink-2); font-size: .72rem; }
+.socreqs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.socreq { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); flex-wrap: wrap; }
+.socreq-n { display: flex; flex-direction: column; min-width: 0; flex: 1 1 120px; line-height: 1.25; } .socreq-n b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.socreq-a { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-left: auto; }
+.socreq-p { font-size: .72rem; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: color-mix(in srgb, #E8A33D 16%, var(--surface)); color: color-mix(in srgb, #A86A10 80%, var(--ink)); }
+.socreq-e { margin: 0; display: flex; align-items: flex-start; gap: 8px; line-height: 1.45; } .socreq-e .sym, .socreq-e svg { width: 22px; height: 22px; flex: none; }
+.socreqrej summary { cursor: pointer; color: var(--muted); } .socreqrej .socreqs { margin-top: 8px; }
+.cmtab { position: relative; } .cmtab-badge { position: absolute; top: 4px; right: 6px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: #E5484D; color: #fff; font: 700 .68rem/18px var(--f-body); font-style: normal; text-align: center; }
+@media (prefers-reduced-motion: no-preference) { .socreq { animation: fcin .3s ease both; } }
+
 /* ===== Mundos ===== */
 .wmapwrap { position: relative; border-radius: 24px; overflow: hidden; box-shadow: var(--shadow); background: var(--surface-2); margin: 4px 0 4px; }
 .wmap { display: block; width: 100%; height: auto; }
@@ -9810,7 +9828,8 @@ function socStats(sh) { const o = { dia: todayKey() };
   if (sh.act) o.ev = socS().ev.slice(0, 12);
   return o; }
 /* ---------- base de datos ---------- */
-function socRedraw() { const el = document.querySelector("[data-soccard]"); if (el) { const y = scrollY; el.outerHTML = socCard(); if (Math.abs(scrollY - y) > 2) scrollTo(0, y); } }
+function socReqBadge() { const t = document.querySelector('.cmtab[data-tab="companeros"]'); if (!t) return; const n = socRel().inc.length; let bd = t.querySelector(".cmtab-badge"); if (!n) { if (bd) bd.remove(); return; } if (!bd) { bd = document.createElement("em"); bd.className = "cmtab-badge"; t.appendChild(bd); } bd.textContent = n; bd.setAttribute("aria-label", `${n} solicitudes nuevas`); }
+function socRedraw() { try { socReqBadge(); } catch (e) {} const el = document.querySelector("[data-soccard]"); if (el) { const y = scrollY; el.outerHTML = socCard(); if (Math.abs(scrollY - y) > 2) scrollTo(0, y); } }
 function socStart() { if (SOC.unsub || SOC.failed || !socAvail()) return;
   try { SOC.unsub = ctx.db.collection("social").limit(500).onSnapshot(snap => { const d = {}; snap.docs.forEach(x => { if (x.exists) d[x.id] = x.data() || {}; }); SOC.docs = d; const first = !SOC.ready; SOC.ready = true; SOC.err = ""; SOC.syncAt = Date.now(); if (first) socProfiles();
       socDecryptAll().then(socRedraw); socMaybePublish(); socRedraw(); },
@@ -9820,10 +9839,10 @@ async function socWrite(patch, full) { if (!socAvail()) return false; const ref 
   try { if (full) await ref.set(patch); else await ref.update(patch); SOC.msg = ""; SOC.syncAt = Date.now(); return true; }
   catch (e) { SOC.msg = e && (e.code === "not_granted" || e.code === "permission_denied") ? "No tienes permiso para publicar: pide a quien compartió la app acceso de colaborador." : "No se pudo guardar. Revisa tu conexión e inténtalo de nuevo."; return false; } }
 const socSet = a => [...new Set(a || [])];
-function socRel() { const me = socMe(); if (!me || !me.on) return { fr: [], inc: [], out: [] }; const mine = new Set([...(me.fr || []), ...(me.req || [])]), ign = new Set(me.ign || []), fr = [], inc = [], out = [];
+function socRel() { const me = socMe(); if (!me || !me.on) return { fr: [], inc: [], out: [], rej: [] }; const mine = new Set([...(me.fr || []), ...(me.req || [])]), ign = new Set(me.ign || []), fr = [], inc = [], out = [], rej = [];
   Object.entries(SOC.docs).forEach(([id, d]) => { if (id === ctx.uid || !d.on) return; const theirs = new Set([...(d.fr || []), ...(d.req || [])]);
-    if (mine.has(id) && theirs.has(ctx.uid)) fr.push(id); else if (theirs.has(ctx.uid) && !mine.has(id) && !ign.has(id)) inc.push(id); else if ((me.req || []).includes(id)) out.push(id); });
-  (me.req || []).forEach(id => { if (!SOC.docs[id] && !out.includes(id)) out.push(id); }); return { fr, inc, out }; }
+    if (mine.has(id) && theirs.has(ctx.uid)) fr.push(id); else if (theirs.has(ctx.uid) && !mine.has(id) && !ign.has(id)) inc.push(id); else if (theirs.has(ctx.uid) && !mine.has(id)) rej.push(id); else if ((me.req || []).includes(id)) out.push(id); });
+  (me.req || []).forEach(id => { if (!SOC.docs[id] && !out.includes(id)) out.push(id); }); return { fr, inc, out, rej }; }
 /* descifra lo que cada amigo publicó para mí */
 async function socDecryptAll() { if (!socAvail()) return; const { fr } = socRel();
   await Promise.all(fr.map(async id => { const d = SOC.docs[id], box = d && d.enc && d.enc[ctx.uid]; if (!box || !d.pk) { delete SOC.dec[id]; return; } const sig = box.ct.slice(0, 32); if (SOC.dec[id] && SOC.dec[id]._sig === sig) return;
@@ -9870,6 +9889,16 @@ function socChCard(ch, fr) { const own = socS().ch[ch.id], me = socMe() || {}, d
     <p class="tiny muted">Meta compartida: ${ch.n} ${esc(unit)} cada quien${ch.by === ctx.uid ? " · lo creaste tú" : ` · propuesto por ${esc((SOC.docs[ch.by] || {}).alias || "un amigo")}`}. Nadie pierde puntos: cada avance cuenta para ti.</p>
     ${parts.map(([id, n, v]) => `<div class="socchrow"><span class="tiny">${esc(n)}</span><span class="pbar"><i style="width:${v === null || v === undefined ? 0 : Math.min(100, v / ch.n * 100)}%"></i></span><span class="tiny">${v === null || v === undefined ? (id === ctx.uid ? "sin unirte" : "pendiente") : `${Math.min(v, ch.n)}/${ch.n}`}</span></div>`).join("")}
     ${!own || !own.joined ? (done ? "" : `<button class="btn sm primary" data-soc="join" data-ch="${esc(ch.id)}">Unirme al reto</button>`) : done ? `<p class="tiny"><b>Resultado:</b> ${reached} de ${parts.length} alcanzaron la meta.</p>` : ""}</article>`; }
+/* v33.3 · espacio fijo de solicitudes: recibidas (aceptar / rechazar), enviadas (cancelar una por una) y rechazadas (recuperar) */
+function socReqs(inc, out, rej) { const nm = id => esc((SOC.docs[id] || {}).alias || "Persona sin perfil aún"), org = id => (SOC.docs[id] || {}).org;
+  const row = (id, btns, tag) => `<li class="socreq">${socAv(id, (SOC.docs[id] || {}).alias)}<span class="socreq-n"><b>${nm(id)}</b>${org(id) ? `<span class="tiny muted">${esc(org(id))}</span>` : tag ? `<span class="tiny muted">${tag}</span>` : ""}</span><span class="socreq-a">${btns}</span></li>`;
+  const recv = inc.length ? `<ul class="socreqs">${inc.map(id => row(id, `<button class="btn sm primary" data-soc="accept" data-id="${esc(id)}">${icon("check")}Aceptar</button><button class="btn sm ghost" data-soc="ignore" data-id="${esc(id)}">Rechazar</button>`, "Quiere unirse a tu comunidad")).join("")}</ul>`
+    : `<p class="socreq-e tiny muted">${catSym("chat")}No tienes solicitudes nuevas. Cuando alguien te agregue con tu código o tu nombre de usuario, aparecerá aquí.</p>`;
+  const sent = out.length ? `<ul class="socreqs">${out.map(id => row(id, `<span class="socreq-p">Pendiente</span><button class="btn sm ghost" data-soc="cancel1" data-id="${esc(id)}" aria-label="Cancelar solicitud a ${nm(id)}">Cancelar</button>`, "Esperando que acepte")).join("")}</ul>`
+    : `<p class="socreq-e tiny muted">${catSym("perfil")}No tienes solicitudes enviadas pendientes. <button class="linkbtn" data-soc="panel" data-p="find">Buscar amigos</button></p>`;
+  return `<section class="socreqbox" aria-label="Solicitudes"><div class="socreqh"><h3 class="socsh">${catSym("chat")}Solicitudes${inc.length ? `<span class="socreq-badge">${inc.length} nueva${inc.length === 1 ? "" : "s"}</span>` : ""}</h3></div>
+    <div class="socreqcols"><div class="socreqcol"><p class="socreqt">Recibidas <span>${inc.length}</span></p>${recv}</div><div class="socreqcol"><p class="socreqt">Enviadas <span>${out.length}</span></p>${sent}</div></div>
+    ${rej.length ? `<details class="socreqrej"><summary class="tiny">Rechazadas (${rej.length})</summary><ul class="socreqs">${rej.map(id => row(id, `<button class="btn sm ghost" data-soc="unign" data-id="${esc(id)}">Recuperar</button>`, "La rechazaste; sigue esperando")).join("")}</ul></details>` : ""}</section>`; }
 function socCard() { socStart(); socTick();
   const me = socMe(), on = !!(me && me.on), sync = SOC.syncAt ? Math.max(0, Math.round((Date.now() - SOC.syncAt) / 60000)) : null;
   const head = `<div class="soch"><div class="soch-t"><h2 class="soct">${catSym("comunidad")}Compañeros</h2><p class="small muted">Comparte tu avance solo con quien tú elijas, anímense y propongan retos.</p></div>${on ? `<div class="soch-r"><span class="socsync ${SOC.err ? "off" : ""}" title="Estado de sincronización"><i></i>${SOC.err ? "Sin conexión" : sync === null ? "Conectando…" : sync < 1 ? "Al día" : `Hace ${sync} min`}</span><button class="btn ghost sm" data-soc="panel" data-p="set" aria-label="Privacidad" title="Privacidad">${icon("gear")}<span>Privacidad</span></button></div>` : ""}</div>`;
@@ -9883,7 +9912,7 @@ function socCard() { socStart(); socTick();
     <label class="small socl">Nombre de usuario<input class="input" id="soc-alias" maxlength="24" placeholder="Ej. andrea.arq" value="${esc(UI.socAlias || "")}" autocomplete="off"></label>
     <details class="socdet"><summary class="tiny"><b>Qué compartir</b> (puedes cambiarlo después)</summary><div class="socshare">${SOC_FIELDS.map(([k, n]) => `<label class="tiny"><input type="checkbox" data-socf="${k}" ${k !== "tiempo" ? "checked" : ""}> ${esc(n)}</label>`).join("")}<label class="tiny"><input type="checkbox" data-socf="find" checked> Permitir que me encuentren por mi nombre de usuario</label></div></details>
     <button class="btn primary sm" data-soc="on">${icon("users")}Crear mi perfil</button>${SOC.msg ? `<p class="tiny" role="status">${esc(SOC.msg)}</p>` : ""}</div>${steps}</div>`);
-  const { fr, inc, out } = socRel(), sh = socS().share || me.share || {}, P = SOC.panel, feed = socFeed(fr);
+  const { fr, inc, out, rej } = socRel(), sh = socS().share || me.share || {}, P = SOC.panel, feed = socFeed(fr);
   const chs = []; Object.values(socS().ch).forEach(c => chs.push(c)); fr.forEach(id => ((SOC.dec[id] || {}).ch || []).forEach(c => { if (!chs.some(x => x.id === c.id)) chs.push(c); }));
   const actCh = chs.filter(c => todayKey() <= c.end || addDays(c.end, 7) >= todayKey()).sort((a, b) => (a.end || "").localeCompare(b.end || "")).slice(0, 4);
   const live = actCh.filter(c => todayKey() <= c.end).length, wk = feed.filter(e => !e.me && (e.at || "") >= addDays(todayKey(), -7)).length;
@@ -9906,8 +9935,7 @@ function socCard() { socStart(); socTick();
       <div class="row" style="gap:6px;flex-wrap:wrap;align-items:center"><code class="soccode">${esc(ctx.uid)}</code><button class="btn sm" data-soc="copy">${icon("copy")}Copiar invitación</button></div></div>` : ""}
     ${P === "ch" ? `<div class="socpanel exin"><p class="small"><b>Nuevo reto entre amigos</b></p><label class="small socl">Tipo de reto<select id="soc-chk" class="input">${Object.entries(SOC_CH).map(([k, v]) => `<option value="${k}">${esc(v[0])} (${v[2]} ${esc(v[1])}, ${v[3]} días)</option>`).join("")}</select></label>
       <p class="tiny"><b>Invitar a:</b></p><div class="socshare">${fr.map(id => `<label class="tiny"><input type="checkbox" data-socinv="${esc(id)}" checked> ${esc((SOC.docs[id] || {}).alias || "Amigo")}</label>`).join("")}</div><p class="tiny muted">Cuenta solo lo que cada quien estudie desde que se une. No cambia tu XP ni tu dominio.</p><button class="btn sm primary" data-soc="mkch">Crear reto</button></div>` : ""}
-    ${inc.length ? `<div class="socblk"><p class="tiny"><b>Solicitudes recibidas</b></p>${inc.map(id => `<div class="socrow">${socAv(id, (SOC.docs[id] || {}).alias)}<b class="small grow">${esc((SOC.docs[id] || {}).alias || "Sin nombre")}</b><button class="btn sm primary" data-soc="accept" data-id="${esc(id)}">Aceptar</button><button class="btn sm ghost" data-soc="ignore" data-id="${esc(id)}">Rechazar</button></div>`).join("")}</div>` : ""}
-    ${out.length ? `<p class="tiny muted">Solicitudes enviadas pendientes: ${out.map(id => esc((SOC.docs[id] || {}).alias || "persona sin perfil aún")).join(", ")}. <button class="linkbtn" data-soc="cancelreq">Cancelar</button></p>` : ""}
+    ${socReqs(inc, out, rej)}
     ${empty ? start + (ch ? `<div class="socgridm solo">${ch}</div>` : "") : `${tabs}<div class="socgridm soc-t-${T}">${people}<div class="socside">${act}${ch}</div></div>`}
     ${SOC.msg ? `<p class="tiny socmsg" role="status">${esc(SOC.msg)}</p>` : ""}`); }
 /* nombres y fotos de perfil (solo cuando la persona es visible para quien mira; se guardan solo ids) */
@@ -9927,6 +9955,8 @@ document.addEventListener("click", async e => { const b = e.target.closest && e.
   if (a === "accept") { if (await socWrite({ fr: socSet([...(me.fr || []), id]), ign: (me.ign || []).filter(x => x !== id) })) { uiSound("levelup"); socEvent("amigo", "sumó un amigo a su comunidad"); SOC.lastSig = ""; } return; }
   if (a === "ignore") { await socWrite({ ign: socSet([...(me.ign || []), id]) }); return; }
   if (a === "req") { if (id === ctx.uid) return; await socWrite({ req: socSet([...(me.req || []), id]), ign: (me.ign || []).filter(x => x !== id) }); SOC.msg = "Solicitud enviada. Aparecerá en su comunidad hasta que la acepte."; uiSound("success"); socRedraw(); return; }
+  if (a === "cancel1") { SOC.msg = "Solicitud cancelada."; await socWrite({ req: (me.req || []).filter(x => x !== id) }); socRedraw(); return; }
+  if (a === "unign") { SOC.msg = "La solicitud volvió a Recibidas."; await socWrite({ ign: (me.ign || []).filter(x => x !== id) }); socRedraw(); return; }
   if (a === "cancelreq") { const { out } = socRel(); await socWrite({ req: (me.req || []).filter(x => !out.includes(x)) }); return; }
   if (a === "rm") { const enc = Object.assign({}, me.enc || {}); delete enc[id]; await socWrite({ fr: (me.fr || []).filter(x => x !== id), req: (me.req || []).filter(x => x !== id), ign: socSet([...(me.ign || []), id]), enc }); SOC.open = null; delete SOC.dec[id]; SOC.lastSig = ""; socRedraw(); return; }
   if (a === "cheer") { const c = (me.cheers || []).filter(x => x.at >= addDays(todayKey(), -14)); if (c.some(x => x.to === id && x.at === todayKey())) { SOC.msg = "Ya felicitaste hoy a esta persona."; socRedraw(); return; } c.push({ to: id, at: todayKey() }); await socWrite({ cheers: c.slice(-40) }); uiSound("levelup"); SOC.msg = "¡Felicitación enviada!"; socRedraw(); return; }
@@ -10118,7 +10148,7 @@ function cmHero() { const lv = lvlFromXP(S.xp || 0), got = MEDALS.filter(cmEarne
       <div class="cmlv"><b>Nivel ${lv.n}</b><span>${esc(lv.name)}</span><div class="bar"><i style="width:${Math.round(lv.cur / lv.need * 100)}%"></i></div><span class="tiny muted">${lv.cur} / ${lv.need} XP para el nivel ${lv.n + 1}</span></div>
       ${(() => { const sk = typeof streak === "function" ? streak() : 0, nl = cmCount(S.lessonsDone); return `<div class="cmstats"><span><b>${sk}</b> ${sk === 1 ? "día" : "días"} de racha</span><span><b>${got}</b> de ${MEDALS.length} medallas</span><span><b>${nl}</b> ${nl === 1 ? "lección" : "lecciones"}</span></div>`; })()}
       ${fav.length ? `<div class="cmfav">${fav.map(m => `<button class="cmfavm" data-act="cm-medal" data-id="${m.id}" title="${esc(m.n)}">${medalSVG(m, true, 46)}</button>`).join("")}<span class="tiny muted">Medallas favoritas</span></div>` : `<p class="tiny muted">Elige hasta 3 medallas favoritas en la pestaña Medallas.</p>`}</div></section>`; }
-function cmTabs() { const T = UI.cmTab || "inicio"; return `<nav class="cmtabs" role="tablist" aria-label="Secciones de Mi comunidad">${CM_TABS.map(([k, n, ic]) => `<button class="cmtab ${T === k ? "on" : ""}" role="tab" aria-selected="${T === k}" data-act="cm-tab" data-tab="${k}">${catSym(ic)}<span>${n}</span></button>`).join("")}</nav>`; }
+function cmTabs() { const T = UI.cmTab || "inicio"; return `<nav class="cmtabs" role="tablist" aria-label="Secciones de Mi comunidad">${CM_TABS.map(([k, n, ic]) => `<button class="cmtab ${T === k ? "on" : ""}" role="tab" aria-selected="${T === k}" data-act="cm-tab" data-tab="${k}">${catSym(ic)}<span>${n}</span>${k === "companeros" && typeof socRel === "function" && socRel().inc.length ? `<em class="cmtab-badge" aria-label="${socRel().inc.length} solicitudes nuevas">${socRel().inc.length}</em>` : ""}</button>`).join("")}</nav>`; }
 function cmQuestsHTML() { const st = cmQState(), k = todayKey(), cl = S.quest && S.quest[k] && S.quest[k].claimed;
   return `<section class="cmcard cmquests"><div class="row between" style="gap:8px;align-items:center"><h2 class="cmh">${catSym("mision")}Misiones de hoy</h2><span class="tiny muted">Se renuevan cada día</span></div>
     <ol class="cmql">${st.qs.map(x => `<li class="${x.ok ? "ok" : ""}"><span class="cmqdot">${x.ok ? icon("check") : ""}</span><span class="cmqic">${catSym(CM_QSYM[x.q.id] || "mision")}</span><span class="cmqb"><b>${esc(x.q.n)}</b><span class="cmqbar"><i style="width:${Math.round(x.a / x.b * 100)}%"></i><em>${x.a} / ${x.b}</em></span></span>${x.ok ? "" : `<button class="btn ghost sm" data-act="go" data-r="${x.q.go}" aria-label="Ir a ${esc(x.q.n)}">${icon("right")}</button>`}</li>`).join("")}</ol>
